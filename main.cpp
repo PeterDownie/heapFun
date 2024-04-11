@@ -6,5 +6,5 @@ int main(){
 	for(int i = 0; i < 100; i++){
 		i1.addNumber(i);
 	}
-	std::cout << "BFR: " << i1.getBufferReassignments() << std::endl;
+	std::cout << i1.getIndex(200) << std::endl;
 }

@@ -12,6 +12,13 @@
  */
 #include <iostream>
 #include "heap.hpp"
+	
+int inter::getIndex(int index) const{
+	if(index >= count){
+		throw std::out_of_range("INDEX_NOT_DEFINED");
+	}
+	return payload[index];
+}
 
 inter::inter(int buffer) : buffer(buffer){
 	if(buffer < 1){
