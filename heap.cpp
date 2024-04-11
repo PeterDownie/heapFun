@@ -2,7 +2,7 @@
  * Created By: Peter Downie (peterdownie@live.com)
  * Created: 2024-04-09 
  * This program stores integers in the heap. This allows for dynamic memory usage.
- * This will be more cpu intesive, because the heap uses more resources to assign.
+ number;* This will be more cpu intesive, because the heap uses more resources to assign.
  *
  * Upgrades
  * Putting in a buffer number to reduce the amount of reassignment.
@@ -13,44 +13,56 @@
 #include <iostream>
 #include "heap.hpp"
 	
-int inter::getIndex(int index) const{
+template <typename T>
+int inter<T>::getIndex(int index) const{
 	if(index >= count){
 		throw std::out_of_range("INDEX_NOT_DEFINED");
 	}
 	return payload[index];
 }
 
-inter::inter(int buffer) : buffer(buffer){
+template <typename T>
+inter<T>::inter(): buffer(1){
+}
+
+template <typename T>
+inter<T>::inter(int buffer) : buffer(buffer){
 	if(buffer < 1){
 		throw std::out_of_range("BUFFER_MUST_BE_AT_LEAST_ONE"); 
 	}
 }
-void inter::addNumber(int number){
+
+template <typename T>
+void inter<T>::insert(T input){
 	count++;
 	if(count != 1){
 		int remainingBuffer = getBufferRemainder();
 		if(remainingBuffer == 0){
 			bufferReassignments++;
-			int *old = payload;	
-			payload = new int[count + buffer];
+			T *old = payload;	
+			payload = new T[count + buffer];
 			for(int i = 0; i < (count-1); i++){
 				payload[i] = old[i];
 			}
-			payload[count - 1] = number;
+			payload[count - 1] = input;
 		}else{
-			payload[count - 1] = number;
+			payload[count - 1] = input;
 		}
 	}else{
-		payload = new int[buffer];
-		payload[0] = number;
+		payload = new T[buffer];
+		payload[0] = input;
 	}
 }
-void inter::printNumbers(){
+
+template <typename T>
+void inter<T>::print(){
 	for(int i = 0; i < count; i++){
 		std::cout << payload[i] << std::endl;	
 	}
 }
-int inter::getBufferRemainder() const{
+
+template <typename T>
+int inter<T>::getBufferRemainder() const{
 	int cBufferMultiplier = 1;
 	do{
 		if(count <= (buffer * cBufferMultiplier)){
@@ -59,6 +71,8 @@ int inter::getBufferRemainder() const{
 		cBufferMultiplier++;	
 	}while(true);
 }
-int inter::getBufferReassignments(){
+
+template <typename T>
+int inter<T>::getBufferReassignments() const{
 	return bufferReassignments;
 }

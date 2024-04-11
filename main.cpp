@@ -1,10 +1,11 @@
 #include <iostream>
-#include "heap.hpp"
+#include <string>
+//#include "heap.hpp"
+#include "heap.cpp"
 
 int main(){
-	inter i1(10);
-	for(int i = 0; i < 100; i++){
-		i1.addNumber(i);
-	}
-	std::cout << i1.getIndex(200) << std::endl;
+	inter<std::string> i1(10);
+	i1.insert("Hello");
+	i1.insert("World");
+	i1.print();
 }

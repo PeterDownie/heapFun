@@ -8,22 +8,26 @@
  * Putting in a buffer number to reduce the amount of reassignment.
  * Okay this is pretty neat.
  *
- * This is going to be split!
+ * This is going to be split! - done
+ *
+ * This now takes a typename and can add different types of objects!
  */
 #include <iostream>
 
+template <typename T>
 class inter{
-	int *payload = new int[0];
+	T *payload = new T[0];
 	int count = 0;
 	int buffer = 1; 
 	int bufferReassignments = 0;
 	public:
 	inter(); /* Default buffer of one */
 	inter(int buffer); /* Set buffer, uses more space */
-	void addNumber(int number); /* Add a number to the array */
-	void printNumbers(); /* Print all of the numbers in the array */
-	int getBufferReassignments(); /* See how many times the buffer has been reset */
+	void insert(T input); /* insert value to the array */ 
+	void print(); /* Print all of the numbers in the array */ 
+	int getBufferReassignments() const; /* See how many times the buffer has been reset */
 	int getIndex(int index) const;
 	private: 
 	int getBufferRemainder() const; /* If 0, new buffer needs to be created */
 };
+
