@@ -12,9 +12,114 @@
  */
 #include <iostream>
 #include "heap.hpp"
+
+template <typename T>
+bool inter<T>::itemsLeft(){
+	if(nextItem < count){
+		return true;
+	}
+	return false;
+}
+
+template <typename T>
+T inter<T>::getNextItem(){
+	if(nextItem < count){
+		return payload[nextItem++];
+	}
+	throw std::out_of_range("nextItem_gt_count_check_itemsLeft"); 
+}
+
+template <typename T>
+void inter<T>::resetNextItem(){
+	nextItem = 0;	
+}
+
+template <typename T>
+void inter<T>::resizeArrayIfNeeded(){
+	if(count == 1){
+		payload = new T[buffer];
+	}else if(getBufferRemainder() == 0){
+		bufferReassignments++;
+		T *old = new T[count];
+		for(int i = 0; i < count; i++){
+			old[i] = payload[i];
+		}	
+		payload = new T[count + buffer];
+		for(int i = 0; i < count; i++){
+			payload[i] = old[i];
+		}
+	}
+	//delete old; //TODO: memory leak?
+}
+
+template <typename T>
+void inter<T>::insertLast(T input){
+	count++;
+	resizeArrayIfNeeded();
+	payload[count-1] = input;
+}
+
+template <typename T>
+inter<T>::~inter(){
+	//delete payload;
+}
+
+template <typename T>
+void inter<T>::insertFirst(T input){
+	T *old = new T[count];
+	for(int i = 0; i < count; i++){
+		old[i] = payload[i];
+	}
+	count++;
+	resizeArrayIfNeeded();
+	payload[0] = input;
+	for(int i = 1; i < (count); i++){
+		payload[i] = old[i-1];	
+	}
+	//delete old; //TODO: memory leak?
+}
+
+template <typename T>
+void inter<T>::deleteIndexFirst(){
+	T *old = payload;
+	for(int i = 0; i < (count -1); i++){
+		payload[i] = old[i + 1];
+	}
+	count--;
+}
+
+template <typename T>
+void inter<T>::deleteIndexLast(){
+	count--;
+}
+
+template <typename T>
+void inter<T>::removeCurrentBuffer(){
+	T *old = payload;
+	payload = new T[count];	
+	for(int i = 0; i < count; i++){
+		payload[i] = old[i];	
+	}
+	//delete old; //TODO: memory leak?
+}
+
+template <typename T>
+void inter<T>::deleteIndexAt(int index){
+	if(index > (count - 1)){
+		throw std::out_of_range("INDEX_OUT_OF_RANGE");	
+	}
+	//If the item is the last index, it will not need changing.
+	if(index != (count - 1)){
+		T *old = payload; 
+		for(int i = index; i < (count - 1); i++){
+			payload[i] = old[i + 1];
+		}
+	}
+	count--;	
+}
 	
 template <typename T>
-int inter<T>::getIndex(int index) const{
+T inter<T>::getIndex(int index) const{
 	if(index >= count){
 		throw std::out_of_range("INDEX_NOT_DEFINED");
 	}
@@ -33,25 +138,21 @@ inter<T>::inter(int buffer) : buffer(buffer){
 }
 
 template <typename T>
-void inter<T>::insert(T input){
-	count++;
-	if(count != 1){
-		int remainingBuffer = getBufferRemainder();
-		if(remainingBuffer == 0){
-			bufferReassignments++;
-			T *old = payload;	
-			payload = new T[count + buffer];
-			for(int i = 0; i < (count-1); i++){
-				payload[i] = old[i];
-			}
-			payload[count - 1] = input;
-		}else{
-			payload[count - 1] = input;
-		}
-	}else{
-		payload = new T[buffer];
-		payload[0] = input;
+void inter<T>::insertAt(int index, T input){
+	if(index > count){
+		throw std::out_of_range("insertAt_INDEX_IS_TOO_BIG");
 	}
+	T *old = new T[count];
+	for(int i = index; i < count; i++){
+		old[i] = payload[i];
+	}
+	count++;
+	resizeArrayIfNeeded();
+	payload[index] = input;
+	for(int i = (index+1); i < count; i++){
+		payload[i] = old[i-1];	
+	}
+	//delete old; //TODO: memory leak?
 }
 
 template <typename T>

@@ -5,7 +5,7 @@ heap: main.cpp heap.o
 heap.o: heap.hpp heap.cpp
 	g++ -c heap.cpp -o heap.o
 
-gbd: main.cpp
+gdb: main.cpp
 	g++ -g main.cpp -o testVersion
 
 clean:
