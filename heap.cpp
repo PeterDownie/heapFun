@@ -14,6 +14,21 @@
 #include "heap.hpp"
 
 template <typename T>
+void inter<T>::setBufferSize(unsigned int size){
+	currentPayloadSize = count + size;
+	T *old = payload;
+	payload = new T[currentPayloadSize];;	
+	for(int i = 0; i < count; i++){
+		payload[i] = old[i];
+	}
+}
+
+template <typename T>
+int inter<T>::getCurrentPayloadSize(){
+	return currentPayloadSize;
+}
+
+template <typename T>
 bool inter<T>::itemsLeft(){
 	if(nextItem < count){
 		return true;
@@ -37,14 +52,16 @@ void inter<T>::resetNextItem(){
 template <typename T>
 void inter<T>::resizeArrayIfNeeded(){
 	if(count == 1){
-		payload = new T[buffer];
+		currentPayloadSize = buffer;
+		payload = new T[currentPayloadSize];
 	}else if(getBufferRemainder() == 0){
 		bufferReassignments++;
 		T *old = new T[count];
 		for(int i = 0; i < count; i++){
 			old[i] = payload[i];
 		}	
-		payload = new T[count + buffer];
+		currentPayloadSize = count + buffer;
+		payload = new T[currentPayloadSize];
 		for(int i = 0; i < count; i++){
 			payload[i] = old[i];
 		}
@@ -96,7 +113,8 @@ void inter<T>::deleteIndexLast(){
 template <typename T>
 void inter<T>::removeCurrentBuffer(){
 	T *old = payload;
-	payload = new T[count];	
+	currentPayloadSize = count;
+	payload = new T[currentPayloadSize];	
 	for(int i = 0; i < count; i++){
 		payload[i] = old[i];	
 	}

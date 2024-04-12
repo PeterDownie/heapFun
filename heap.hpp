@@ -12,6 +12,12 @@
  *
  * This now takes a typename and can add different types of objects!
  * This may have memory leaks
+ *
+ * Efficent use
+ * buffer at 1 is space efficent.
+ * If you know exactly how many items you want to add use setBuffersize.
+ * insertLast is the most efficent insert.
+ * removeCurrentBuffer reduces memory usage, useful if you are done loading things.
  */
 #include <iostream>
 //TODO: any T *old = payload()
@@ -36,7 +42,10 @@ class inter{
 	void resetNextItem(); //reset items	
 	T getNextItem(); //return items, NULL when no items left.
 	bool itemsLeft(); //check this to end loop of getNextItem();
+	int getCurrentPayloadSize(); //How many items can be put into currently allocated memory.
+	void setBufferSize(unsigned int size); //If you know how many items you are adding, this is efficent.
 	private:
+	int currentPayloadSize; //memory allocated to payload
 	int nextItem = 0; //For iterating through the function. 
 	int count = 0; //Items currently stored in payload, may have more items in memory.
 	int buffer = 1; //How much buffer to create when reassising payload.
